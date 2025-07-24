@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Meet AI Agent - MVP</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-robot"></i> Google Meet AI Agent</h1>
+            <div class="status-indicator">
+                <span id="connectionStatus" class="status offline">Disconnected</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <h2><i class="fas fa-cog"></i> Control Panel</h2>
+                
+                <div class="form-group">
+                    <label for="meetingUrl">
+                        <i class="fas fa-link"></i> Google Meet URL
+                    </label>
+                    <input 
+                        type="text" 
+                        id="meetingUrl" 
+                        placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                        class="input-field"
+                    >
+                    <small>Extract meeting ID from the URL (e.g., "abc-defg-hij")</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="agentContext">
+                        <i class="fas fa-comment-alt"></i> Agent Context
+                    </label>
+                    <textarea 
+                        id="agentContext" 
+                        rows="4" 
+                        placeholder="Provide context about the meeting, your role, key topics to focus on..."
+                        class="input-field"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="agentName">
+                        <i class="fas fa-user-robot"></i> Agent Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="agentName" 
+                        value="AI Meeting Assistant"
+                        class="input-field"
+                    >
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-success">
+                        <i class="fas fa-play"></i> Start Agent
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger" disabled>
+                        <i class="fas fa-stop"></i> Stop Agent
+                    </button>
+                    <button id="testBtn" class="btn btn-info">
+                        <i class="fas fa-vial"></i> Test Services
+                    </button>
+                    <button id="cleanupBtn" class="btn btn-warning">
+                        <i class="fas fa-broom"></i> Cleanup Sessions
+                    </button>
+                </div>
+            </section>
+
+            <!-- Status Dashboard -->
+            <section class="status-dashboard">
+                <h2><i class="fas fa-chart-line"></i> Session Status</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">Duration</span>
+                            <span id="sessionDuration" class="stat-value">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">Participants</span>
+                            <span id="participantCount" class="stat-value">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-comments"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">Responses</span>
+                            <span id="responseCount" class="stat-value">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">Transcript</span>
+                            <span id="transcriptCount" class="stat-value">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Transcript -->
+            <section class="transcript-section">
+                <h2><i class="fas fa-microphone"></i> Live Transcript</h2>
+                <div id="transcriptContainer" class="transcript-container">
+                    <div class="transcript-placeholder">
+                        <i class="fas fa-comment-dots"></i>
+                        <p>Transcript will appear here when the meeting starts...</p>
+                    </div>
+                </div>
+                <div class="transcript-controls">
+                    <button id="refreshTranscript" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button id="exportTranscript" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </section>
+
+            <!-- Logs -->
+            <section class="logs-section">
+                <h2><i class="fas fa-terminal"></i> System Logs</h2>
+                <div id="logsContainer" class="logs-container">
+                    <div class="log-entry info">
+                        <span class="log-time">--:--:--</span>
+                        <span class="log-message">System initialized. Ready to start.</span>
+                    </div>
+                </div>
+                <div class="logs-controls">
+                    <button id="clearLogs" class="btn btn-secondary">
+                        <i class="fas fa-trash"></i> Clear Logs
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Starting AI Agent...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

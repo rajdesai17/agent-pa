@@ -1,0 +1,70 @@
+# Node
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Vite
+.vite/
+.cache/
+*.tsbuildinfo
+
+# React
+*.env.development
+*.env.production
+
+# Coverage / Testing
+coverage/
+*.lcov
+
+# Python (if used for scripts)
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.env.python
+
+# System
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+docker-compose.override.yml
+*.db
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Whisper or audio caches (if used)
+audio_cache/
+*.wav
+*.mp3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Local keys or credentials
+*.key
+*.pem
+*.crt
+auth.json
+
+# Misc
+*.bak
+*.orig
