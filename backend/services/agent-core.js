@@ -112,9 +112,26 @@ class AgentCore {
                     ];
                     let ttsLang = session.options.language || 'en-IN';
                     if (!allowedLangs.includes(ttsLang)) ttsLang = 'en-IN';
-                    const ttsResult = await this.sarvam.textToSpeech(response.response, {
-                        language: ttsLang
-                    });
+                    
+                    // Check for duplicate audio first
+                    const duplicateCheck = this.duplicateDetector.checkDuplicate(response.response, ttsLang, 'anushka');
+                    
+                    let ttsResult;
+                    if (duplicateCheck.isDuplicate) {
+                        console.log(`🎵 Using existing audio for duplicate response: "${response.response.substring(0, 50)}..."`);
+                        // Create a mock result using existing file
+                        const fs = require('fs');
+                        const audioData = fs.readFileSync(duplicateCheck.existingFile);
+                        ttsResult = {
+                            success: true,
+                            audio: audioData,
+                            isDuplicate: true
+                        };
+                    } else {
+                        ttsResult = await this.sarvam.textToSpeech(response.response, {
+                            language: ttsLang
+                        });
+                    }
                     const queue = this.responseQueue.get(meetingId);
                     queue.push({
                         text: response.response,
@@ -148,6 +165,12 @@ class AgentCore {
                             // Save audio file
                             fs.writeFileSync(audioPath, ttsResult.audio);
                             console.log(`💾 Audio saved: ${audioPath}`);
+                            
+                            // Register in duplicate detector if not a duplicate
+                            if (!ttsResult.isDuplicate) {
+                                const downloadUrl = `/api/agent/responses/${audioFileName}`;
+                                this.duplicateDetector.registerAudioFile(response.response, ttsLang, 'anushka', audioPath, downloadUrl);
+                            }
                             
                             // Play audio locally (participants will hear via your microphone)
                             const command = process.platform === 'win32' 
