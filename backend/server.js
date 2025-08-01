@@ -423,6 +423,34 @@ app.get('/api/test-audio', (req, res) => {
     }
 });
 
+// Duplicate detection management endpoints
+app.get('/api/duplicate-detector/stats', (req, res) => {
+    try {
+        const stats = duplicateDetector.getStats();
+        res.json({ success: true, stats });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/duplicate-detector/cleanup', (req, res) => {
+    try {
+        const cleaned = duplicateDetector.cleanupCache();
+        res.json({ success: true, cleaned, message: `Cleaned up ${cleaned} invalid entries` });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/duplicate-detector/cache', (req, res) => {
+    try {
+        const cache = duplicateDetector.listCache();
+        res.json({ success: true, cache });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Fallback: serve frontend for all other routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));

@@ -1,12 +1,14 @@
 const GeminiService = require('./gemini-service');
 const SarvamService = require('./sarvam-service');
 const VexaService = require('./vexa-service.js');
+const DuplicateDetector = require('../utils/duplicate-detector');
 
 class AgentCore {
     constructor() {
         this.gemini = new GeminiService();
         this.sarvam = new SarvamService();
         this.vexa = new VexaService();
+        this.duplicateDetector = new DuplicateDetector();
         this.activeSessions = new Map();
         this.transcriptBuffer = new Map();
         this.responseQueue = new Map();
