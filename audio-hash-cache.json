@@ -54,5 +54,173 @@
     "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T17-51-17-397Z.wav",
     "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T17-51-17-397Z.wav",
     "timestamp": "2025-08-01T17:51:17.398Z"
+  },
+  "d04a303d932d3fb1d7c568ef69d5c162": {
+    "text": "Yes, I can hear you.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-34-23-502Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-34-23-502Z.wav",
+    "timestamp": "2025-08-01T18:34:23.503Z"
+  },
+  "df05dbc41a99d276736c95f8ca4c11c8": {
+    "text": "... (no response, as the assistant has already confirmed audio and is only to reply when asked for new information)",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-34-29-391Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-34-29-391Z.wav",
+    "timestamp": "2025-08-01T18:34:29.392Z"
+  },
+  "6dcfa7ca2aa10c421cca10105b4c61ce": {
+    "text": "Most of the UI/UX work is done, about 85%. All the latest changes have been pushed to GitHub for your review.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-34-56-456Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-34-56-456Z.wav",
+    "timestamp": "2025-08-01T18:34:56.457Z"
+  },
+  "1f35cc719921fe10d40961ced4c9da48": {
+    "text": "About 85% of the UI/UX work is done.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-35-22-665Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-35-22-665Z.wav",
+    "timestamp": "2025-08-01T18:35:22.666Z"
+  },
+  "01c9709b5a8a12055df05a61eeba94c1": {
+    "text": "We expect to finalize the remaining UI/UX work within a few business days, pending today's feedback.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-35-36-231Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-35-36-231Z.wav",
+    "timestamp": "2025-08-01T18:35:36.233Z"
+  },
+  "2f76985f2f1d95e645e830dd83b9cd3c": {
+    "text": "Yep, I can hear you clearly, Raj. How can I help?",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-38-17-123Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-38-17-123Z.wav",
+    "timestamp": "2025-08-01T18:38:17.125Z"
+  },
+  "01a84a8ede92fa61259453026c3a834d": {
+    "text": "Hey Raj, I'm here to help us keep track of things. I can provide quick updates on the UI/UX progress, note down any feedback, or help outline our next steps.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-38-24-663Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-38-24-663Z.wav",
+    "timestamp": "2025-08-01T18:38:24.664Z"
+  },
+  "fe77de25f4de2b62f3ff0be9a6ea9f60": {
+    "text": "(No response. I will only reply when asked a question.)",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-38-37-399Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-38-37-399Z.wav",
+    "timestamp": "2025-08-01T18:38:37.400Z"
+  },
+  "33776ad2f50d80cd602150c88c1d3d9c": {
+    "text": "Hi Raj, we're discussing the website redesign project. The UI/UX work is about 85% complete and pushed to GitHub for your review and feedback.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-46-43-704Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-46-43-704Z.wav",
+    "timestamp": "2025-08-01T18:46:43.705Z"
+  },
+  "4cbcbd05d926f3a398bae1d0b9dfb1bb": {
+    "text": "Yes, that's right. The UI/UX work is available on GitHub for your review and feedback.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-14-192Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-14-192Z.wav",
+    "timestamp": "2025-08-01T18:47:14.194Z"
+  },
+  "ae628cbd2f2a64795d2446fbde5370c8": {
+    "text": "Just to clarify, Raj, the UI/UX work is available on GitHub for your review, not WhatsApp.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-24-270Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-24-270Z.wav",
+    "timestamp": "2025-08-01T18:47:24.271Z"
+  },
+  "fd650cc1612ada0e9f35a0bd515d4e20": {
+    "text": "Yes, I have that. What are your initial thoughts or feedback on the UI/UX work?",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-24-640Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-24-640Z.wav",
+    "timestamp": "2025-08-01T18:47:24.642Z"
+  },
+  "0acc95b12c395b1a38dc63b319ea7a4b": {
+    "text": "Great. Please share your initial thoughts when you're ready.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-29-246Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-29-246Z.wav",
+    "timestamp": "2025-08-01T18:47:29.248Z"
+  },
+  "dab1526a90aed8bd62b2f8a15429bba1": {
+    "text": "Just let me know when you're ready to dive in, or if you'd like me to walk you through any specific sections.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-42-735Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-42-735Z.wav",
+    "timestamp": "2025-08-01T18:47:42.735Z"
+  },
+  "2265eb578becd4fdfd28ee806f68cb1f": {
+    "text": "Great. How would you like to begin the review? We can start with a general overview or dive into specific sections.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-47-47-079Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-47-47-079Z.wav",
+    "timestamp": "2025-08-01T18:47:47.080Z"
+  },
+  "1fe28bb840abd9d493e9f9ede3df4eff": {
+    "text": "Hi Raj, I'm here. How would you like to proceed with reviewing the UI/UX work?",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-48-25-843Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-48-25-843Z.wav",
+    "timestamp": "2025-08-01T18:48:25.844Z"
+  },
+  "75fbbb18d50432f236d6c1804887f7eb": {
+    "text": "Hi Raj, I'm here and ready. How would you like to kick off the review of the UI/UX work today?",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-48-33-290Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-48-33-290Z.wav",
+    "timestamp": "2025-08-01T18:48:33.292Z"
+  },
+  "adad1463038e64cafdb84ed5df3cc617": {
+    "text": "We've completed about 85% of the UI/UX work, and everything has been pushed to GitHub, ready for your review.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-48-35-170Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-48-35-170Z.wav",
+    "timestamp": "2025-08-01T18:48:35.171Z"
+  },
+  "e17b5d73bb11b20fcb0e293d7e817b66": {
+    "text": "The remaining 15% will be completed once we've incorporated your feedback from this review session.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-48-50-897Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-48-50-897Z.wav",
+    "timestamp": "2025-08-01T18:48:50.898Z"
+  },
+  "7aaf982425434a32e7f9d362f4110ed4": {
+    "text": "Yes, precisely. We're ready to get your feedback on the work we've pushed to GitHub.",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-48-57-264Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-48-57-264Z.wav",
+    "timestamp": "2025-08-01T18:48:57.265Z"
+  },
+  "a855a80ce0b497d33207bfd8faea724e": {
+    "text": "Okay. Shall we begin the review of the UI/UX work pushed to GitHub?",
+    "language": "en-IN",
+    "speaker": "anushka",
+    "filePath": "C:\\Users\\Raj\\SaaS\\google-meet-agent-mvp\\agent-responses\\response_mef-btwo-ytt_2025-08-01T18-49-09-651Z.wav",
+    "downloadUrl": "/api/agent/responses/response_mef-btwo-ytt_2025-08-01T18-49-09-651Z.wav",
+    "timestamp": "2025-08-01T18:49:09.652Z"
   }
 }
