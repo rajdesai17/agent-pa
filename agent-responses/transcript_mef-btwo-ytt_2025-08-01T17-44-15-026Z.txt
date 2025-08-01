@@ -1,0 +1,5 @@
+Timestamp: 2025-08-01T17:44:15.039Z
+Meeting ID: mef-btwo-ytt
+Response: "Hello Raj! Welcome. We're ready to start whenever you are. Today, we'll be reviewing the 85% complete UI/UX work and discussing next steps."
+Audio File: response_mef-btwo-ytt_2025-08-01T17-44-15-026Z.wav
+

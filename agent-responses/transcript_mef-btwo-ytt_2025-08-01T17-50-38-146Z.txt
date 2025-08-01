@@ -1,0 +1,5 @@
+Timestamp: 2025-08-01T17:50:38.161Z
+Meeting ID: mef-btwo-ytt
+Response: Yes, I can hear you clearly, Raj.
+Audio File: response_mef-btwo-ytt_2025-08-01T17-50-38-146Z.wav
+

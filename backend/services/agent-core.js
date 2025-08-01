@@ -12,6 +12,7 @@ class AgentCore {
         this.activeSessions = new Map();
         this.transcriptBuffer = new Map();
         this.responseQueue = new Map();
+        this.lastResponseTime = new Map(); // Track last response time per meeting
     }
 
     async startMeetingSession(meetingId, context, options = {}) {
@@ -62,6 +63,8 @@ class AgentCore {
     startTranscriptMonitoring(meetingId) {
         const pollInterval = 2000;
         let lastTranscriptLength = 0;
+        const processedSegments = new Set(); // Track processed segments to prevent duplicates
+        
         const monitor = setInterval(async () => {
             const session = this.activeSessions.get(meetingId);
             if (!session || !session.isActive) {
@@ -75,8 +78,18 @@ class AgentCore {
                     if (segments.length > lastTranscriptLength) {
                         const newSegments = segments.slice(lastTranscriptLength);
                         lastTranscriptLength = segments.length;
+                        
                         for (const segment of newSegments) {
-                            await this.processTranscriptSegment(meetingId, segment);
+                            // Create a unique identifier for this segment
+                            const segmentId = `${segment.start}-${segment.end}-${segment.text}`;
+                            
+                            // Only process if we haven't seen this segment before
+                            if (!processedSegments.has(segmentId)) {
+                                processedSegments.add(segmentId);
+                                await this.processTranscriptSegment(meetingId, segment);
+                            } else {
+                                console.log(`🔄 Skipping duplicate segment: "${segment.text.substring(0, 50)}..."`);
+                            }
                         }
                         session.lastActivity = new Date().toISOString();
                     }
@@ -98,8 +111,25 @@ class AgentCore {
                 processed: false,
                 timestamp: new Date().toISOString()
             });
+            
+            // Check if we've already responded to this exact text recently
+            const recentResponses = this.responseQueue.get(meetingId) || [];
+            const recentTexts = recentResponses.map(r => r.text).slice(-5); // Check last 5 responses
+            if (recentTexts.includes(segment.text)) {
+                console.log(`🔄 Skipping duplicate response for: "${segment.text.substring(0, 50)}..."`);
+                return;
+            }
+            
             const shouldRespond = this.shouldGenerateResponse(segment, buffer);
             if (shouldRespond) {
+                // Check cooldown to prevent rapid-fire responses
+                const lastResponse = this.lastResponseTime.get(meetingId);
+                const now = Date.now();
+                if (lastResponse && (now - lastResponse) < 3000) { // 3 second cooldown
+                    console.log(`⏰ Skipping response due to cooldown for: "${segment.text.substring(0, 50)}..."`);
+                    return;
+                }
+                this.lastResponseTime.set(meetingId, now);
                 const response = await this.generateContextualResponse(
                     meetingId, 
                     segment.text, 
