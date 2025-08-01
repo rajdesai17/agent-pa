@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const AgentCore = require('./services/agent-core');
 const SarvamService = require('./services/sarvam-service');
+const DuplicateDetector = require('./utils/duplicate-detector');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3001;
 // Initialize services
 const agentCore = new AgentCore();
 const sarvamService = new SarvamService();
+const duplicateDetector = new DuplicateDetector();
 
 // Middleware
 app.use(cors({
@@ -262,6 +264,38 @@ app.post('/api/test/tts-save', async (req, res) => {
 
         console.log(`🎤 Generating TTS for: "${text}" (${language})`);
         
+        // Check for duplicates first
+        const duplicateCheck = duplicateDetector.checkDuplicate(text, language, speaker);
+        
+        if (duplicateCheck.isDuplicate) {
+            console.log(`🎵 Using existing audio file for duplicate text`);
+            
+            // Get file info
+            const fs = require('fs');
+            const stats = fs.statSync(duplicateCheck.existingFile);
+            const filename = path.basename(duplicateCheck.existingFile);
+            
+            const metadata = {
+                text: text,
+                language: language,
+                speaker: speaker,
+                timestamp: new Date().toISOString(),
+                fileSize: stats.size,
+                duration: '~' + Math.ceil(text.length / 15) + ' seconds',
+                isDuplicate: true
+            };
+            
+            return res.json({
+                success: true,
+                message: 'Using existing audio file (duplicate detected)',
+                audioFile: filename,
+                filePath: duplicateCheck.existingFile,
+                metadata: metadata,
+                downloadUrl: duplicateCheck.downloadUrl,
+                isDuplicate: true
+            });
+        }
+        
         const result = await sarvamService.textToSpeech(text, {
             language: language,
             speaker: speaker
@@ -299,6 +333,10 @@ app.post('/api/test/tts-save', async (req, res) => {
             };
             fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
             
+            // Register in duplicate detector
+            const downloadUrl = `/api/test-audio/${audioFileName}`;
+            duplicateDetector.registerAudioFile(text, language, speaker, audioPath, downloadUrl);
+            
             console.log(`💾 Test audio saved: ${audioPath}`);
             
             res.json({
@@ -307,7 +345,8 @@ app.post('/api/test/tts-save', async (req, res) => {
                 audioFile: audioFileName,
                 filePath: audioPath,
                 metadata: metadata,
-                downloadUrl: `/api/test-audio/${audioFileName}`
+                downloadUrl: downloadUrl,
+                isDuplicate: false
             });
         } else {
             res.status(500).json({ error: result.error, details: result.details });
