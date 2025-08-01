@@ -73,7 +73,7 @@ body {
 .main-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     gap: 30px;
 }
 
@@ -92,9 +92,14 @@ body {
     grid-row: 2;
 }
 
-.logs-section {
+.tts-testing-section {
     grid-column: 1 / -1;
     grid-row: 3;
+}
+
+.logs-section {
+    grid-column: 1 / -1;
+    grid-row: 4;
 }
 
 /* Sections */
@@ -406,6 +411,71 @@ small {
     font-size: 1.2em;
 }
 
+/* TTS Testing */
+.tts-testing-section {
+    grid-column: 1 / -1;
+    grid-row: 4;
+}
+
+.tts-controls {
+    margin-bottom: 20px;
+}
+
+.test-audio-container {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.test-audio-placeholder {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 40px;
+}
+
+.test-audio-placeholder i {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.test-audio-entry {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+.test-audio-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.test-audio-text {
+    color: #ffffff;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.test-audio-controls {
+    display: flex;
+    gap: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
@@ -427,9 +497,14 @@ small {
         grid-row: 3;
     }
     
-    .logs-section {
+    .tts-testing-section {
         grid-column: 1;
         grid-row: 4;
+    }
+    
+    .logs-section {
+        grid-column: 1;
+        grid-row: 5;
     }
     
     .stats-grid {

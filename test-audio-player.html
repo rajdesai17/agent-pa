@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Audio Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .audio-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .metadata {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .status {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎤 Test Audio Player</h1>
+    <div class="status" id="status">Loading audio files...</div>
+    <div id="audioList"></div>
+
+    <script>
+        async function loadAudioFiles() {
+            try {
+                const response = await fetch('http://localhost:3001/api/test-audio');
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('status');
+                const audioListEl = document.getElementById('audioList');
+                
+                if (data.files && data.files.length > 0) {
+                    statusEl.textContent = `Found ${data.files.length} audio file(s)`;
+                    
+                    data.files.forEach(file => {
+                        const audioItem = document.createElement('div');
+                        audioItem.className = 'audio-item';
+                        
+                        const metadata = file.metadata || {};
+                        const text = metadata.text || 'No text available';
+                        const language = metadata.language || 'Unknown';
+                        const timestamp = new Date(file.created).toLocaleString();
+                        
+                        audioItem.innerHTML = `
+                            <div class="metadata">
+                                <strong>Text:</strong> "${text}"<br>
+                                <strong>Language:</strong> ${language}<br>
+                                <strong>Created:</strong> ${timestamp}<br>
+                                <strong>Size:</strong> ${(file.size / 1024).toFixed(1)} KB
+                            </div>
+                            <div class="audio-controls">
+                                <button onclick="playAudio('${file.downloadUrl}')">
+                                    ▶️ Play
+                                </button>
+                                <button onclick="downloadAudio('${file.downloadUrl}', '${file.filename}')">
+                                    📥 Download
+                                </button>
+                            </div>
+                        `;
+                        
+                        audioListEl.appendChild(audioItem);
+                    });
+                } else {
+                    statusEl.textContent = 'No audio files found. Generate some audio first!';
+                    audioListEl.innerHTML = `
+                        <div style="text-align: center; color: #666;">
+                            <p>No audio files found.</p>
+                            <p>Visit <a href="http://localhost:3001">http://localhost:3001</a> to generate audio files.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = `Error loading audio files: ${error.message}`;
+            }
+        }
+
+        function playAudio(url) {
+            const audio = new Audio(url);
+            audio.play().catch(e => {
+                alert(`Error playing audio: ${e.message}`);
+            });
+        }
+
+        function downloadAudio(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Load audio files when page loads
+        loadAudioFiles();
+        
+        // Refresh every 30 seconds
+        setInterval(loadAudioFiles, 30000);
+    </script>
+</body>
+</html> 

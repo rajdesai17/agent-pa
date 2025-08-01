@@ -28,6 +28,13 @@ class GoogleMeetAgent {
         this.refreshResponsesBtn = document.getElementById('refreshResponses');
         this.clearLogsBtn = document.getElementById('clearLogs');
         
+        // TTS Testing elements
+        this.ttsTextInput = document.getElementById('ttsText');
+        this.ttsLanguageSelect = document.getElementById('ttsLanguage');
+        this.generateTTSBtn = document.getElementById('generateTTS');
+        this.refreshTestAudioBtn = document.getElementById('refreshTestAudio');
+        this.testAudioContainer = document.getElementById('testAudioContainer');
+        
         // Status elements
         this.connectionStatus = document.getElementById('connectionStatus');
         this.sessionDuration = document.getElementById('sessionDuration');
@@ -51,6 +58,10 @@ class GoogleMeetAgent {
         this.exportTranscriptBtn.addEventListener('click', () => this.exportTranscript());
         this.refreshResponsesBtn.addEventListener('click', () => this.refreshResponses());
         this.clearLogsBtn.addEventListener('click', () => this.clearLogs());
+        
+        // TTS Testing event listeners
+        this.generateTTSBtn.addEventListener('click', () => this.generateTTS());
+        this.refreshTestAudioBtn.addEventListener('click', () => this.refreshTestAudio());
         
         // Auto-extract meeting ID from URL
         this.meetingUrlInput.addEventListener('input', (e) => this.extractMeetingId(e.target.value));
@@ -556,6 +567,106 @@ class GoogleMeetAgent {
     clearLogs() {
         this.logsContainer.innerHTML = '';
         this.log('Logs cleared', 'info');
+    }
+
+    async generateTTS() {
+        try {
+            const text = this.ttsTextInput.value.trim();
+            const language = this.ttsLanguageSelect.value;
+            
+            if (!text) {
+                this.log('Please enter text to convert to speech', 'error');
+                return;
+            }
+
+            this.showLoading('Generating audio...');
+            this.log(`Generating TTS for: "${text}" (${language})`, 'info');
+
+            const response = await fetch(`${this.baseUrl}/test/tts-save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    language: language
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.log('✅ Audio generated and saved successfully!', 'success');
+                this.log(`📁 File: ${result.audioFile}`, 'info');
+                this.log(`📂 Path: ${result.filePath}`, 'info');
+                
+                // Refresh the test audio list
+                await this.refreshTestAudio();
+                
+                // Auto-play the audio
+                this.playAudio(result.downloadUrl);
+                
+            } else {
+                throw new Error(result.error || 'Failed to generate audio');
+            }
+
+        } catch (error) {
+            this.log(`Error generating TTS: ${error.message}`, 'error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    async refreshTestAudio() {
+        try {
+            const response = await fetch(`${this.baseUrl}/test-audio`);
+            const result = await response.json();
+            
+            if (result.files && result.files.length > 0) {
+                this.displayTestAudio(result.files);
+                this.log(`Found ${result.files.length} test audio files`, 'info');
+            } else {
+                this.testAudioContainer.innerHTML = `
+                    <div class="test-audio-placeholder">
+                        <i class="fas fa-music"></i>
+                        <p>No test audio files found. Generate some audio to see them here.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            this.log(`Error loading test audio: ${error.message}`, 'error');
+        }
+    }
+
+    displayTestAudio(files) {
+        const audioHtml = files.map(file => `
+            <div class="test-audio-entry">
+                <div class="test-audio-meta">
+                    <span><i class="fas fa-calendar"></i> ${new Date(file.created).toLocaleString()}</span>
+                    <span><i class="fas fa-file-audio"></i> ${(file.size / 1024).toFixed(1)} KB</span>
+                    ${file.metadata ? `<span><i class="fas fa-language"></i> ${file.metadata.language}</span>` : ''}
+                </div>
+                ${file.metadata ? `<div class="test-audio-text">"${file.metadata.text}"</div>` : ''}
+                <div class="test-audio-controls">
+                    <button data-audio-url="${file.downloadUrl}" class="btn btn-sm btn-primary play-audio-btn">
+                        <i class="fas fa-play"></i> Play
+                    </button>
+                    <a href="${file.downloadUrl}" download="${file.filename}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            </div>
+        `).join('');
+
+        this.testAudioContainer.innerHTML = audioHtml;
+        
+        // Add event listeners for play buttons
+        this.testAudioContainer.querySelectorAll('.play-audio-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const audioUrl = e.target.closest('button').dataset.audioUrl;
+                this.playAudio(audioUrl);
+            });
+        });
     }
 }
 

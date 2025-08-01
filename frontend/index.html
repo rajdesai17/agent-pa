@@ -132,6 +132,59 @@
                 </div>
             </section>
 
+            <!-- TTS Testing -->
+            <section class="tts-testing-section">
+                <h2><i class="fas fa-microphone"></i> TTS Testing</h2>
+                <div class="tts-controls">
+                    <div class="form-group">
+                        <label for="ttsText">
+                            <i class="fas fa-comment"></i> Text to Convert
+                        </label>
+                        <textarea 
+                            id="ttsText" 
+                            rows="3" 
+                            placeholder="Enter text to convert to speech..."
+                            class="input-field"
+                        >Hello, this is a test of the Sarvam TTS system. How does this sound?</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ttsLanguage">
+                            <i class="fas fa-globe"></i> Language
+                        </label>
+                        <select id="ttsLanguage" class="input-field">
+                            <option value="en-IN">English (India)</option>
+                            <option value="hi-IN">Hindi</option>
+                            <option value="ta-IN">Tamil</option>
+                            <option value="te-IN">Telugu</option>
+                            <option value="bn-IN">Bengali</option>
+                            <option value="ml-IN">Malayalam</option>
+                            <option value="kn-IN">Kannada</option>
+                            <option value="gu-IN">Gujarati</option>
+                            <option value="mr-IN">Marathi</option>
+                            <option value="pa-IN">Punjabi</option>
+                            <option value="od-IN">Odia</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="generateTTS" class="btn btn-success">
+                            <i class="fas fa-play"></i> Generate & Save Audio
+                        </button>
+                        <button id="refreshTestAudio" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Refresh List
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="testAudioContainer" class="test-audio-container">
+                    <div class="test-audio-placeholder">
+                        <i class="fas fa-music"></i>
+                        <p>Generated audio files will appear here...</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Agent Responses -->
             <section class="responses-section">
                 <h2><i class="fas fa-volume-up"></i> Agent Responses</h2>

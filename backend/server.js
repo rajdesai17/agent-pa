@@ -252,6 +252,138 @@ app.post('/api/test/vexa', async (req, res) => {
     }
 });
 
+// Test TTS and save audio endpoint
+app.post('/api/test/tts-save', async (req, res) => {
+    try {
+        const { text, language = 'en-IN', speaker = 'anushka' } = req.body;
+        if (!text) {
+            return res.status(400).json({ error: 'text is required' });
+        }
+
+        console.log(`🎤 Generating TTS for: "${text}" (${language})`);
+        
+        const result = await sarvamService.textToSpeech(text, {
+            language: language,
+            speaker: speaker
+        });
+
+        if (result.success) {
+            // Save to project root for easy access
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Create test-audio directory in project root
+            const testAudioDir = path.join(__dirname, '../test-audio');
+            if (!fs.existsSync(testAudioDir)) {
+                fs.mkdirSync(testAudioDir, { recursive: true });
+            }
+            
+            // Generate filename
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const safeText = text.substring(0, 30).replace(/[^a-zA-Z0-9]/g, '_');
+            const audioFileName = `test_${safeText}_${timestamp}.wav`;
+            const audioPath = path.join(testAudioDir, audioFileName);
+            
+            // Save audio file
+            fs.writeFileSync(audioPath, result.audio);
+            
+            // Create metadata file
+            const metadataPath = path.join(testAudioDir, `${audioFileName}.json`);
+            const metadata = {
+                text: text,
+                language: language,
+                speaker: speaker,
+                timestamp: new Date().toISOString(),
+                fileSize: result.audio.length,
+                duration: '~' + Math.ceil(text.length / 15) + ' seconds'
+            };
+            fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+            
+            console.log(`💾 Test audio saved: ${audioPath}`);
+            
+            res.json({
+                success: true,
+                message: 'Audio generated and saved successfully',
+                audioFile: audioFileName,
+                filePath: audioPath,
+                metadata: metadata,
+                downloadUrl: `/api/test-audio/${audioFileName}`
+            });
+        } else {
+            res.status(500).json({ error: result.error, details: result.details });
+        }
+    } catch (error) {
+        console.error('TTS save test error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Serve test audio files
+app.get('/api/test-audio/:filename', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        
+        const { filename } = req.params;
+        const testAudioDir = path.join(__dirname, '../test-audio');
+        const filePath = path.join(testAudioDir, filename);
+        
+        if (!fs.existsSync(filePath) || !filename.endsWith('.wav')) {
+            return res.status(404).json({ error: 'Audio file not found' });
+        }
+        
+        res.set({
+            'Content-Type': 'audio/wav',
+            'Content-Disposition': `attachment; filename="${filename}"`
+        });
+        
+        res.sendFile(filePath);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// List all test audio files
+app.get('/api/test-audio', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        
+        const testAudioDir = path.join(__dirname, '../test-audio');
+        if (!fs.existsSync(testAudioDir)) {
+            return res.json({ files: [] });
+        }
+        
+        const files = fs.readdirSync(testAudioDir);
+        const audioFiles = files.filter(file => file.endsWith('.wav'));
+        const audioList = audioFiles.map(file => {
+            const stats = fs.statSync(path.join(testAudioDir, file));
+            const metadataFile = file + '.json';
+            let metadata = null;
+            
+            if (fs.existsSync(path.join(testAudioDir, metadataFile))) {
+                try {
+                    metadata = JSON.parse(fs.readFileSync(path.join(testAudioDir, metadataFile), 'utf8'));
+                } catch (e) {
+                    console.warn(`Could not parse metadata for ${file}`);
+                }
+            }
+            
+            return {
+                filename: file,
+                size: stats.size,
+                created: stats.birthtime,
+                downloadUrl: `/api/test-audio/${file}`,
+                metadata: metadata
+            };
+        }).sort((a, b) => new Date(b.created) - new Date(a.created));
+        
+        res.json({ files: audioList });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Fallback: serve frontend for all other routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
