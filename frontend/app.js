@@ -25,6 +25,7 @@ class GoogleMeetAgent {
         this.cleanupBtn = document.getElementById('cleanupBtn');
         this.refreshTranscriptBtn = document.getElementById('refreshTranscript');
         this.exportTranscriptBtn = document.getElementById('exportTranscript');
+        this.refreshResponsesBtn = document.getElementById('refreshResponses');
         this.clearLogsBtn = document.getElementById('clearLogs');
         
         // Status elements
@@ -36,6 +37,7 @@ class GoogleMeetAgent {
         
         // Containers
         this.transcriptContainer = document.getElementById('transcriptContainer');
+        this.responsesContainer = document.getElementById('responsesContainer');
         this.logsContainer = document.getElementById('logsContainer');
         this.loadingOverlay = document.getElementById('loadingOverlay');
     }
@@ -47,6 +49,7 @@ class GoogleMeetAgent {
         this.cleanupBtn.addEventListener('click', () => this.cleanupSessions());
         this.refreshTranscriptBtn.addEventListener('click', () => this.refreshTranscript());
         this.exportTranscriptBtn.addEventListener('click', () => this.exportTranscript());
+        this.refreshResponsesBtn.addEventListener('click', () => this.refreshResponses());
         this.clearLogsBtn.addEventListener('click', () => this.clearLogs());
         
         // Auto-extract meeting ID from URL
@@ -56,6 +59,9 @@ class GoogleMeetAgent {
     initializeLogger() {
         this.clearLogs();
         this.log('System initialized. Ready to start.', 'info');
+        
+        // Load any existing responses
+        this.refreshResponses();
     }
 
     extractMeetingId(url) {
@@ -482,6 +488,68 @@ class GoogleMeetAgent {
             
         } catch (error) {
             this.log(`Cleanup error: ${error.message}`, 'error');
+        }
+    }
+
+    async refreshResponses() {
+        try {
+            const response = await fetch(`${this.baseUrl}/agent/responses`);
+            const result = await response.json();
+            
+            if (result.responses && result.responses.length > 0) {
+                this.displayResponses(result.responses);
+                this.log(`Found ${result.responses.length} agent responses`, 'info');
+            } else {
+                this.responsesContainer.innerHTML = `
+                    <div class="responses-placeholder">
+                        <i class="fas fa-microphone-slash"></i>
+                        <p>No agent responses recorded yet.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            this.log(`Error loading responses: ${error.message}`, 'error');
+        }
+    }
+
+    displayResponses(responses) {
+        const responsesHtml = responses.map(response => `
+            <div class="response-entry">
+                <div class="response-meta">
+                    <span><i class="fas fa-calendar"></i> ${new Date(response.created).toLocaleString()}</span>
+                    <span><i class="fas fa-users"></i> ${response.meetingId}</span>
+                    <span><i class="fas fa-file-audio"></i> ${(response.size / 1024).toFixed(1)} KB</span>
+                </div>
+                <div class="response-controls">
+                    <button data-audio-url="${response.downloadUrl}" class="btn btn-sm btn-primary play-audio-btn">
+                        <i class="fas fa-play"></i> Play
+                    </button>
+                    <a href="${response.downloadUrl}" download="${response.filename}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            </div>
+        `).join('');
+
+        this.responsesContainer.innerHTML = responsesHtml;
+        
+        // Add event listeners for play buttons
+        this.responsesContainer.querySelectorAll('.play-audio-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const audioUrl = e.target.closest('button').dataset.audioUrl;
+                this.playAudio(audioUrl);
+            });
+        });
+    }
+
+    playAudio(url) {
+        try {
+            const audio = new Audio(url);
+            audio.play().catch(e => {
+                this.log(`Audio playback error: ${e.message}`, 'error');
+            });
+        } catch (error) {
+            this.log(`Error playing audio: ${error.message}`, 'error');
         }
     }
 

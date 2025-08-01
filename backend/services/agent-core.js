@@ -125,7 +125,51 @@ class AgentCore {
                     console.log(`Generated response for ${meetingId}: ${response.response}`);
                     if (ttsResult.success) {
                         console.log(`TTS conversion successful: ${ttsResult.audio.length} bytes`);
-                        // TODO: Send audio to Vexa or frontend for playback
+                        
+                        // Play audio locally and store for later listening
+                        try {
+                            const fs = require('fs');
+                            const path = require('path');
+                            const { exec } = require('child_process');
+                            
+                            // Create audio storage directory if it doesn't exist
+                            const audioDir = path.join(__dirname, '../../agent-responses');
+                            if (!fs.existsSync(audioDir)) {
+                                fs.mkdirSync(audioDir, { recursive: true });
+                            }
+                            
+                            // Generate filename with timestamp and meeting info
+                            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                            const audioFileName = `response_${meetingId}_${timestamp}.wav`;
+                            const audioPath = path.join(audioDir, audioFileName);
+                            
+                            // Save audio file
+                            fs.writeFileSync(audioPath, ttsResult.audio);
+                            console.log(`💾 Audio saved: ${audioPath}`);
+                            
+                            // Play audio locally (participants will hear via your microphone)
+                            const command = process.platform === 'win32' 
+                                ? `powershell -c "(New-Object Media.SoundPlayer '${audioPath}').PlaySync()"` 
+                                : process.platform === 'darwin' 
+                                ? `afplay "${audioPath}"` 
+                                : `aplay "${audioPath}"`;
+                            
+                            exec(command, (error, stdout, stderr) => {
+                                if (error) {
+                                    console.error(`🔊 Audio playback error: ${error.message}`);
+                                } else {
+                                    console.log(`🔊 Audio played successfully for ${meetingId}`);
+                                }
+                            });
+                            
+                            // Also save a transcript log
+                            const logPath = path.join(audioDir, `transcript_${meetingId}_${timestamp}.txt`);
+                            const logContent = `Timestamp: ${new Date().toISOString()}\nMeeting ID: ${meetingId}\nResponse: ${response.response}\nAudio File: ${audioFileName}\n\n`;
+                            fs.appendFileSync(logPath, logContent);
+                            
+                        } catch (audioError) {
+                            console.error(`Audio processing error for ${meetingId}:`, audioError.message);
+                        }
                     } else {
                         console.error(`TTS conversion failed: ${ttsResult.error}`);
                     }
@@ -217,6 +261,90 @@ class AgentCore {
         };
         const summaryResult = await this.gemini.generateMeetingSummary(fullTranscript, metadata);
         return summaryResult.success ? summaryResult.summary : 'Summary generation failed.';
+    }
+
+    async stopMeetingSession(meetingId) {
+        try {
+            const session = this.activeSessions.get(meetingId);
+            if (!session) {
+                return {
+                    success: false,
+                    error: 'No active session found for this meeting'
+                };
+            }
+
+            // Stop transcript monitoring
+            if (session.monitor) {
+                clearInterval(session.monitor);
+            }
+
+            // Stop the bot via Vexa
+            const stopResult = await this.vexa.stopBot(meetingId);
+            
+            // Generate meeting summary
+            const summary = await this.generateMeetingSummary(meetingId);
+
+            // Clean up session data
+            this.activeSessions.delete(meetingId);
+            this.transcriptBuffer.delete(meetingId);
+            this.responseQueue.delete(meetingId);
+
+            return {
+                success: true,
+                message: 'Meeting session stopped successfully',
+                summary: summary,
+                botStopResult: stopResult
+            };
+        } catch (error) {
+            console.error('Stop Session Error:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    async cleanupAllSessions() {
+        try {
+            const sessions = Array.from(this.activeSessions.keys());
+            const results = [];
+
+            for (const meetingId of sessions) {
+                const result = await this.stopMeetingSession(meetingId);
+                results.push({ meetingId, result });
+            }
+
+            return {
+                success: true,
+                message: `Cleaned up ${sessions.length} active sessions`,
+                results: results
+            };
+        } catch (error) {
+            console.error('Cleanup Error:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    getTranscript(meetingId) {
+        const buffer = this.transcriptBuffer.get(meetingId);
+        if (!buffer || buffer.length === 0) {
+            return {
+                success: false,
+                error: 'No transcript available for this meeting'
+            };
+        }
+
+        return {
+            success: true,
+            transcript: {
+                segments: buffer,
+                totalSegments: buffer.length,
+                lastUpdated: new Date().toISOString()
+            }
+        };
     }
 }
 

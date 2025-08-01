@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -104,6 +105,149 @@ app.get('/api/sarvam/languages', (req, res) => {
         const languages = sarvamService.getSupportedLanguages();
         res.json({ languages });
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Agent response audio endpoints
+app.get('/api/agent/responses', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        
+        const audioDir = path.join(__dirname, '../agent-responses');
+        if (!fs.existsSync(audioDir)) {
+            return res.json({ responses: [] });
+        }
+        
+        const files = fs.readdirSync(audioDir);
+        const audioFiles = files.filter(file => file.endsWith('.wav'));
+        const responses = audioFiles.map(file => {
+            const stats = fs.statSync(path.join(audioDir, file));
+            const parts = file.replace('.wav', '').split('_');
+            return {
+                filename: file,
+                meetingId: parts[1],
+                timestamp: parts.slice(2).join('_'),
+                size: stats.size,
+                created: stats.birthtime,
+                downloadUrl: `/api/agent/responses/${file}`
+            };
+        }).sort((a, b) => new Date(b.created) - new Date(a.created));
+        
+        res.json({ responses });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/agent/responses/:filename', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        
+        const { filename } = req.params;
+        const audioDir = path.join(__dirname, '../agent-responses');
+        const filePath = path.join(audioDir, filename);
+        
+        if (!fs.existsSync(filePath) || !filename.endsWith('.wav')) {
+            return res.status(404).json({ error: 'Audio file not found' });
+        }
+        
+        res.set({
+            'Content-Type': 'audio/wav',
+            'Content-Disposition': `attachment; filename="${filename}"`
+        });
+        
+        res.sendFile(filePath);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Agent management endpoints
+app.post('/api/agent/start', async (req, res) => {
+    try {
+        const { meetingId, context, options } = req.body;
+        if (!meetingId) {
+            return res.status(400).json({ error: 'meetingId is required' });
+        }
+        
+        const result = await agentCore.startMeetingSession(meetingId, context, options);
+        res.json(result);
+    } catch (error) {
+        console.error('Start agent error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/agent/stop', async (req, res) => {
+    try {
+        const { meetingId } = req.body;
+        if (!meetingId) {
+            return res.status(400).json({ error: 'meetingId is required' });
+        }
+        
+        const result = await agentCore.stopMeetingSession(meetingId);
+        res.json(result);
+    } catch (error) {
+        console.error('Stop agent error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/agent/status/:meetingId', (req, res) => {
+    try {
+        const { meetingId } = req.params;
+        const status = agentCore.getSessionStatus(meetingId);
+        res.json({ success: true, ...status });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/agent/transcript/:meetingId', (req, res) => {
+    try {
+        const { meetingId } = req.params;
+        const transcript = agentCore.getTranscript(meetingId);
+        res.json({ success: true, transcript });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/agent/cleanup', async (req, res) => {
+    try {
+        const result = await agentCore.cleanupAllSessions();
+        res.json(result);
+    } catch (error) {
+        console.error('Cleanup error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Test endpoints
+app.post('/api/test/gemini', async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) {
+            return res.status(400).json({ error: 'text is required' });
+        }
+        
+        const result = await agentCore.gemini.generateResponse(text, 'Test context');
+        res.json(result);
+    } catch (error) {
+        console.error('Gemini test error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/test/vexa', async (req, res) => {
+    try {
+        const result = await agentCore.vexa.testConnection();
+        res.json(result);
+    } catch (error) {
+        console.error('Vexa test error:', error);
         res.status(500).json({ error: error.message });
     }
 });
