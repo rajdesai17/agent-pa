@@ -1,0 +1,5 @@
+Timestamp: 2025-08-04T17:34:10.310Z
+Meeting ID: odh-wvzb-cma
+Response: Yes, I can hear you clearly, Raj. Did you hear my last question about the UI design progress?
+Audio File: response_odh-wvzb-cma_2025-08-04T17-34-10-299Z.wav
+
